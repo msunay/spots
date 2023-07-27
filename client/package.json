@@ -12,6 +12,7 @@
   "dependencies": {
     "@fawmi/vue-google-maps": "^0.9.79",
     "pinia": "^2.1.4",
+    "v-drag": "^3.0.9",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

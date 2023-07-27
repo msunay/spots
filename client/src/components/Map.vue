@@ -19,7 +19,7 @@ const center = ref({
       zoom: 8,
       mapId: '777af55e9dcc2cb5',
       zoomControl: false,
-      mapTypeControl: true,
+      mapTypeControl: false,
       mapTypeControlOptions: {
         style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
       },
@@ -35,7 +35,9 @@ initMap(center);
 </script>
 
 <template>
-  <div id="map"></div>
+  <div id="map">
+
+  </div>
 </template>
 
 <style lang='postcss' scoped>
