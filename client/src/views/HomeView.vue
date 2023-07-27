@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Map from '@/components/Map.vue';
+  import Dashboard from '@/components/Dashboard.vue';
 </script>
 
 <template>
   <main>
-    <Map />
+    <Dashboard />
   </main>
 </template>

@@ -2,18 +2,20 @@
 import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import  VueGoogleMaps from '@fawmi/vue-google-maps'
+// import  VueGoogleMaps from '@fawmi/vue-google-maps'
 
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
 
+const app = createApp(App)
+export const apiKey = import.meta.env.VITE_API_KEY;
 app.use(createPinia())
 app.use(router)
-app.use(VueGoogleMaps, {
-    load: {
-        key: 'YOUR_API_KEY_COMES_HERE',
-    },
-  })
+// app.use(VueGoogleMaps, {
+//     load: {
+//         key: import.meta.env.VITE_API_KEY,
+//         v: 'weekly'
+//     },
+//   })
 app.mount('#app')
