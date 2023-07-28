@@ -1,20 +1,20 @@
 <script setup lang='ts'>
   import Icon from './Icon.vue';
+  import { ref } from 'vue';
 
-  function startDrag(evt, item) {
-      evt.dataTransfer.dropEffect = 'move'
-      evt.dataTransfer.effectAllowed = 'move'
-      evt.dataTransfer.setData('itemID', item.id)
-    }
+  const currentY = ref(0);
+
+  // const onPan = (e: any) => {
+  //   currentY.value = Math.min(0, e)
+  // }
+  // v-hammer:panstart="($event: any) => console.log($event)"
 
 </script>
 
 <template>
   <div
     class="controls-container"
-    draggable="true"
-    @dragstart="startDrag($event, item)"
-  >
+  > // TODO
     <div class="controls-pull-tab"></div>
     <div class="nav-container">
 
