@@ -10,7 +10,6 @@ const google = window.google;
 // })
 const { location } = storeToRefs(useLocationStore());
 
-console.log(location.value);
 
 
 function success(pos: any, map: google.maps.Map) {
@@ -19,7 +18,6 @@ function success(pos: any, map: google.maps.Map) {
     lng: pos.coords.longitude
   }
   map.panTo(newLocation);
-  console.log(newLocation);
   location.value = newLocation;
 }
 

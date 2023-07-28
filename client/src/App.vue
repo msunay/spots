@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { getLondonSpots } from './ApiService';
 
+getLondonSpots()
 </script>
 
 <template>
