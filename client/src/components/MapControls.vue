@@ -1,20 +1,11 @@
 <script setup lang='ts'>
   import Icon from './Icon.vue';
-  import { ref } from 'vue';
-
-  const currentY = ref(0);
-
-  // const onPan = (e: any) => {
-  //   currentY.value = Math.min(0, e)
-  // }
-  // v-hammer:panstart="($event: any) => console.log($event)"
-
-</script>
+  </script>
 
 <template>
   <div
     class="controls-container"
-  > // TODO
+  >
     <div class="controls-pull-tab"></div>
     <div class="nav-container">
 

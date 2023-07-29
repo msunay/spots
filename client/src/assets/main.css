@@ -7,8 +7,4 @@ html, body, #app, main {
   width: 100%;
   margin: 0;
 }
-nav {
-  height: 0px;
-  width: 0px;
-  position: absolute;
-}
+

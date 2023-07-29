@@ -35,3 +35,8 @@ export interface LocationPin {
     coordinates: number[];
   }
 }
+
+export interface Coordinates {
+  lat: number;
+  lng: number;
+}

@@ -1,39 +1,26 @@
 <script setup lang='ts'>
-import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useLocationStore } from "@/stores/location";
 import { storeToRefs } from "pinia";
+import type { Coordinates } from "@/customTypings/Location";
+import { ref } from "vue";
 
-const google = window.google;
-// const center = ref({
-//   lat: 51,
-//   lng: -0.1274318650326508
-// })
+const mapInstance = ref({})
 const { location } = storeToRefs(useLocationStore());
-
-
-
-function success(pos: any, map: google.maps.Map) {
-  const newLocation = {
-    lat: pos.coords.latitude,
-    lng: pos.coords.longitude
-  }
-  map.panTo(newLocation);
-  location.value = newLocation;
-}
 
 const watchID = navigator.geolocation.watchPosition(pos => success(pos, map), error => console.log(error))
 
+const emit = defineEmits([])
+
+// onUnmounted(() => {
+//   navigator.geolocation.clearWatch(watchID)
+// })
+
+let map: google.maps.Map;
+
+initMap(location.value)
 
 
-
-onUnmounted(() => {
-  navigator.geolocation.clearWatch(watchID)
-
-})
-
-let map: google.maps.Map
-async function initMap(center: any): Promise<void> {
-
+async function initMap(center: Coordinates): Promise<void> {
   const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary
   map = new Map(document.getElementById("map") as HTMLElement, {
     center: center,
@@ -49,20 +36,18 @@ async function initMap(center: any): Promise<void> {
     rotateControl: false,
     fullscreenControl: false
   })
-  // infoWindow = new google.maps.InfoWindow();
-
-  // const locationButton = document.createElement("button");
-  // // addEventListener('click', ())
-
-  // locationButton.textContent = "Current Location";
-  // locationButton.classList.add("custom-map-control-button");
-
-  // map.controls[google.maps.ControlPosition.TOP_RIGHT].push(locationButton);
-
 }
 
-initMap(location.value)
-
+function success(pos: GeolocationPosition, map: google.maps.Map) {
+  const newLocation = {
+    lat: pos.coords.latitude,
+    lng: pos.coords.longitude
+  }
+  map.panTo(newLocation);
+  mapInstance.value = map;
+  console.log(newLocation);
+  location.value = newLocation;
+}
 </script>
 
 <template>
