@@ -20,7 +20,7 @@
     flex-direction: column;
     align-items: center;
     height: 70px;
-    width: 100%;
+    width: 99%;
     background-color: white;
     box-shadow: 1px 1px 11px;
     z-index: 1;

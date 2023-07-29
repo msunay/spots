@@ -1,8 +1,9 @@
 <script setup lang='ts'>
 import { useLocationStore } from "@/stores/location";
 import { storeToRefs } from "pinia";
-import type { Coordinates } from "@/customTypings/Location";
-import { ref } from "vue";
+import type { Coordinates, LocationType } from "@/customTypings/Location";
+import { onMounted, ref } from "vue";
+import { getLondonSpots } from "@/ApiService";
 
 const mapInstance = ref({})
 const { location } = storeToRefs(useLocationStore());
@@ -21,10 +22,10 @@ initMap(location.value)
 
 
 async function initMap(center: Coordinates): Promise<void> {
-  const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary
+  const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
   map = new Map(document.getElementById("map") as HTMLElement, {
-    center: center,
-    zoom: 17,
+    center,
+    zoom: 15,
     mapId: '777af55e9dcc2cb5',
     zoomControl: false,
     mapTypeControl: false,
@@ -36,6 +37,16 @@ async function initMap(center: Coordinates): Promise<void> {
     rotateControl: false,
     fullscreenControl: false
   })
+  // const londonSpots = await getLondonSpots()
+
+  // londonSpots.forEach((elem: LocationType) => {
+  //   map.data.addGeoJson(elem)
+  // });
+  // console.log(londonSpots);
+  // const l = new google.maps.KmlLayer({
+  //   url: getLondonSpots()[1]
+  // })
+  // londonSpots.setMap(map)
 }
 
 function success(pos: GeolocationPosition, map: google.maps.Map) {
@@ -45,15 +56,12 @@ function success(pos: GeolocationPosition, map: google.maps.Map) {
   }
   map.panTo(newLocation);
   mapInstance.value = map;
-  console.log(newLocation);
   location.value = newLocation;
 }
 </script>
 
 <template>
-  <div id="map">
-
-  </div>
+  <div id="map"></div>
 </template>
 
 <style lang='postcss' scoped>
