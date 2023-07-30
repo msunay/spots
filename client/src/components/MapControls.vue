@@ -17,6 +17,8 @@
 <style lang='postcss' scoped>
   .controls-container {
     display: flex;
+    position: absolute;
+    bottom: 0px;
     flex-direction: column;
     align-items: center;
     height: 70px;
