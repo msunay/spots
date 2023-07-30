@@ -4,9 +4,9 @@
   </svg>
 </template>
 
-<style lang='postcss' scoped>
+<style scoped>
   .icon {
-    //scale: 60%;
+    scale: 60%;
     z-index: 2;
     height: 50px;
   }

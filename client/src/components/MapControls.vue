@@ -1,21 +1,37 @@
 <script setup lang='ts'>
-  import Icon from './Icon.vue';
+  import { ref } from 'vue';
+import Icon from './Icon.vue';
+
+  // Drawer tab open state
+  const open = ref(false);
+
+  function drawerToggle() {
+    if (open.value) {
+      console.log('Drawer Open => Closed');
+      open.value = false;
+    } else {
+      console.log('Drawer Closed => Open');
+      open.value = true;
+    }
+  }
   </script>
 
 <template>
-  <div
+  <button
     class="controls-container"
+    @click="drawerToggle()"
   >
     <div class="controls-pull-tab"></div>
     <div class="nav-container">
 
       <Icon />
     </div>
-  </div>
+  </button>
 </template>
 
-<style lang='postcss' scoped>
+<style scoped>
   .controls-container {
+    border: none;
     display: flex;
     position: absolute;
     bottom: 0px;
@@ -33,7 +49,6 @@
   .controls-pull-tab {
     position: relative;
     top: 6px;
-    //align-self: center;
     height: 4px;
     width: 40px;
     background-color: rgba(128, 128, 128, 0.495);

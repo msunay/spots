@@ -2,7 +2,13 @@ import { ref } from "vue"
 import { defineStore } from 'pinia'
 
 export const useLocationStore = defineStore('location', () => {
-  const location = ref({ lat: 51.49496781651615, lng: -0.1274318650326508 })
+  const currentlocation = ref({
+    lat: 51.507351,
+    lng: -0.127758
+  })
 
-  return { location }
+  // Tracking enabled state
+  const tracking = ref(false)
+
+  return { currentlocation, tracking }
 })

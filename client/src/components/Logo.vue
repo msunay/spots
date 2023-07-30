@@ -4,7 +4,7 @@
   </svg>
 </template>
 
-<style lang='postcss' scoped>
+<style scoped>
   .main-logo {
     position: relative;
     top: 20px;
