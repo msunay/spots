@@ -24,6 +24,7 @@ export interface LocationType {
 }
 
 export interface LocationPin {
+  _id: string;
   type?: string;
   properties: {
     Name: string;

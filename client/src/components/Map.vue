@@ -75,27 +75,25 @@
     currentMarkerBackground.setVisible(false);
 
     // Get data and add to map
-    const londonSpots = await getLondonSpots()
-
-    for (let type in londonSpots) {
-      londonSpots[type as keyof FeaturesByTypes].forEach((elem: LocationPin) => {
+    const londonSpots: LocationPin[] = await getLondonSpots()
+    for (let spot of londonSpots) {
 
         const marker = new google.maps.Marker({
           position: {
-            lat: elem.geometry.coordinates[1],
-            lng: elem.geometry.coordinates[0]
+            lat: spot.geometry.coordinates[1],
+            lng: spot.geometry.coordinates[0]
           },
           map
-          // title: elem.properties.Name
+          // title: spot.properties.Name
         })
 
         marker.addListener('click', () => {
           infowindow.setContent(
             '<div id="content">' +
-              `<h3 id="firstHeading" class="heading">${elem.properties.Name}</h3>` +
+              `<h3 id="firstHeading" class="heading">${spot.properties.Name}</h3>` +
               '<div id="bodyContent">' +
-                '<a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-                "Details</a> " +
+                `<router-link to="/details/${spot._id}">DEEETZ</router-link>`
+                `<a href='#/details/${spot._id}'>Details</a> ` +
               "</div>" +
             "</div>"
           )
@@ -105,7 +103,7 @@
           })
           infowindow.focus
         })
-      });
+
     }
     // Marker animation
     pulseMarker()

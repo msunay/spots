@@ -1,9 +1,0 @@
-                                '<div id="content">' +
-                                  '<div id="siteNotice">' +
-                                  "</div>" +
-                                  `<h1 id="firstHeading" class="heading">${elem.properties.Name}</h1>` +
-                                  '<div id="bodyContent">' +
-                                    '<a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-                                    "Details</a> " +
-                                  "</div>" +
-                                "</div>"
