@@ -1,6 +1,6 @@
 <script setup lang='ts'>
   import { useLocationStore } from "@/stores/location";
-  import type { Coordinates, LocationType } from "@/customTypings/Location";
+  import type { Coordinates, FeaturesByTypes, LocationPin, LocationType } from "@/customTypings/Location";
   import { onUnmounted, watch } from "vue";
   import { getLondonSpots } from "@/ApiService";
   import locationIcon from './icons/locationIcon.svg'
@@ -11,7 +11,7 @@
   const location = useLocationStore();
   const { currentlocation, tracking } = storeToRefs(location);
 
-  // Define local vars
+  // Define global vars
   let map: google.maps.Map;
   let currentMarker: google.maps.Marker;
   let currentMarkerBackground: google.maps.Marker;
@@ -33,6 +33,7 @@
   // Setup map
   async function initMap(center: Coordinates): Promise<void> {
     const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    let infowindow = new google.maps.InfoWindow;
     map = new Map(document.getElementById("map") as HTMLElement, {
       center,
       zoom: 13,
@@ -47,7 +48,10 @@
       rotateControl: false,
       fullscreenControl: false
     })
-    // const label = new google.maps.
+    // Close infowindow when map is clicked
+    google.maps.event.addListener(map, "click", (event: any) => {
+      infowindow.close();
+    });
     // Set current location marker
     const { lat, lng } = center;
     currentMarker = new google.maps.Marker({
@@ -59,7 +63,6 @@
       }
     });
     currentMarker.setVisible(false);
-    // currentMarker.setLabel()
 
     currentMarkerBackground = new google.maps.Marker({
       position: center,
@@ -74,22 +77,36 @@
     // Get data and add to map
     const londonSpots = await getLondonSpots()
 
-    londonSpots.forEach((elem: LocationType) => {
-      map.data.addGeoJson(elem);
-    })
+    for (let type in londonSpots) {
+      londonSpots[type as keyof FeaturesByTypes].forEach((elem: LocationPin) => {
 
-  /*
-    // Add data to geojson markers
-    map.data.addListener('click', (event: any) => {
-     const feat: google.maps.Data.Feature = event.feature;
-     let html = "<b>"+feat.getProperty('Name')+"</b><br>"+feat.getProperty('description');
-     html += "<br><a class='normal_link' target='_blank' href='"+feat.getProperty('gx_media_links')+"'>link</a>";
-     infowindow.setContent(html);
-    //  infowindow.setPosition(event.latLng);
-    //  infowindow.setOptions({pixelOffset: new google.maps.Size(0,-34)});
-    //  infowindow.open(map);
-    });
-  */
+        const marker = new google.maps.Marker({
+          position: {
+            lat: elem.geometry.coordinates[1],
+            lng: elem.geometry.coordinates[0]
+          },
+          map
+          // title: elem.properties.Name
+        })
+
+        marker.addListener('click', () => {
+          infowindow.setContent(
+            '<div id="content">' +
+              `<h3 id="firstHeading" class="heading">${elem.properties.Name}</h3>` +
+              '<div id="bodyContent">' +
+                '<a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+                "Details</a> " +
+              "</div>" +
+            "</div>"
+          )
+          infowindow.open({
+            anchor: marker,
+            map
+          })
+          infowindow.focus
+        })
+      });
+    }
     // Marker animation
     pulseMarker()
   }
@@ -101,7 +118,7 @@
       watchID = navigator.geolocation.watchPosition(pos => success(pos, map), error => console.log(error), {
         maximumAge: 30000,
         timeout: 15000,
-        enableHighAccuracy: true
+        enableHighAccuracy: true // BUG tracks location after toggle if false
       })
       // Show markers
       currentMarker.setVisible(true)

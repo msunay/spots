@@ -40,3 +40,11 @@ export interface Coordinates {
   lat: number;
   lng: number;
 }
+
+export interface FeaturesByTypes {
+  NewSpots: LocationPin[];
+  OutdoorSpots: LocationPin[];
+  ParkourGyms: LocationPin[];
+  ParkourParks: LocationPin[];
+  UnderCoverSpots: LocationPin[];
+}

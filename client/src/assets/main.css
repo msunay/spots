@@ -2,9 +2,14 @@
   box-sizing: border-box;
   /* border: 1px solid red; */
 }
-html, body, #app, main {
+body, #app, main {
   height: 100%;
   width: 100%;
   margin: 0;
+  overflow: hidden;
 }
-
+html {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
