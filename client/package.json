@@ -7,7 +7,8 @@
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "lint": "eslint --ext .ts,.vue --ignore-path .gitignore src"
   },
   "dependencies": {
     "@fawmi/vue-google-maps": "^0.9.79",
@@ -26,6 +27,8 @@
     "@vue/tsconfig": "^0.4.0",
     "autoprefixer": "^10.4.14",
     "browserslist": "^4.21.9",
+    "eslint": "^8.46.0",
+    "eslint-plugin-vue": "^9.16.1",
     "npm-run-all": "^4.1.5",
     "postcss-preset-env": "^9.1.0",
     "typescript": "~5.1.6",

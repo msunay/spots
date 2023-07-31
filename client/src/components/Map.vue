@@ -32,7 +32,7 @@
   // Functions
   // Setup map
   async function initMap(center: Coordinates): Promise<void> {
-    const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     map = new Map(document.getElementById("map") as HTMLElement, {
       center,
       zoom: 13,
@@ -47,14 +47,11 @@
       rotateControl: false,
       fullscreenControl: false
     })
-
+    // const label = new google.maps.
     // Set current location marker
     const { lat, lng } = center;
     currentMarker = new google.maps.Marker({
-      position: {
-        lat,
-        lng
-      },
+      position: center,
       map,
       icon: {
         url: locationIcon,
@@ -62,12 +59,10 @@
       }
     });
     currentMarker.setVisible(false);
+    // currentMarker.setLabel()
 
     currentMarkerBackground = new google.maps.Marker({
-      position: {
-        lat,
-        lng
-      },
+      position: center,
       map,
       icon: {
         url: locationIconBack,
@@ -80,9 +75,21 @@
     const londonSpots = await getLondonSpots()
 
     londonSpots.forEach((elem: LocationType) => {
-      map.data.addGeoJson(elem)
-    });
+      map.data.addGeoJson(elem);
+    })
 
+  /*
+    // Add data to geojson markers
+    map.data.addListener('click', (event: any) => {
+     const feat: google.maps.Data.Feature = event.feature;
+     let html = "<b>"+feat.getProperty('Name')+"</b><br>"+feat.getProperty('description');
+     html += "<br><a class='normal_link' target='_blank' href='"+feat.getProperty('gx_media_links')+"'>link</a>";
+     infowindow.setContent(html);
+    //  infowindow.setPosition(event.latLng);
+    //  infowindow.setOptions({pixelOffset: new google.maps.Size(0,-34)});
+    //  infowindow.open(map);
+    });
+  */
     // Marker animation
     pulseMarker()
   }
@@ -92,7 +99,8 @@
     if (tracking.value && map) {
       // Get and watch user location to set markers
       watchID = navigator.geolocation.watchPosition(pos => success(pos, map), error => console.log(error), {
-        timeout: 3000,
+        maximumAge: 30000,
+        timeout: 15000,
         enableHighAccuracy: true
       })
       // Show markers
