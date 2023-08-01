@@ -1,4 +1,4 @@
-import { getOneSpot, getLondonSpots } from "./models/Location.Models.js";
+import { getOneSpot, getLondonSpots, postSpot } from "./models/Location.Models.js";
 
 
 export async function getAllLondonSpots(ctx) {
@@ -20,5 +20,16 @@ export async function getOneLondonSpot(ctx) {
   } catch (err) {
     ctx.body = "couldn't get spot :( " + err;
     ctx.status = 500;
+  }
+}
+
+export async function addNewSpot(ctx) {
+  try {
+    const newSpot = await postSpot(ctx.request.body);
+    ctx.body = newSpot;
+    ctx.status = 200;
+  } catch (err) {
+    ctx.body = "couldn't add spot :( " + err;
+    ctx.status = 400;
   }
 }

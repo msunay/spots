@@ -2,10 +2,11 @@
   import { useLocationStore } from "@/stores/location";
   import type { Coordinates, FeaturesByTypes, LocationPin, LocationType } from "@/customTypings/Location";
   import { onUnmounted, watch } from "vue";
-  import { getLondonSpots } from "@/ApiService";
+  import { getLondonSpots, postSpot } from "@/ApiService";
   import locationIcon from './icons/locationIcon.svg'
   import locationIconBack from './icons/locationIconBack.svg'
   import { storeToRefs } from "pinia";
+  import router from "@/router";
 
   // Get location store
   const location = useLocationStore();
@@ -16,6 +17,8 @@
   let currentMarker: google.maps.Marker;
   let currentMarkerBackground: google.maps.Marker;
   let watchID: number;
+  let markers: google.maps.marker.AdvancedMarkerElement[] = [];
+
 
   // Init Map
   initMap(currentlocation.value)
@@ -23,17 +26,18 @@
   // Track location if tracking state true
   watch(tracking, toggleTracking)
 
-  // Stop tracking on unmount
-  onUnmounted(() => {
-    navigator.geolocation.clearWatch(watchID)
-  })
 
 
   // Functions
   // Setup map
   async function initMap(center: Coordinates): Promise<void> {
     const { Map, InfoWindow } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+
     let infowindow = new google.maps.InfoWindow;
+    let collisionBehavior = google.maps.CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY;
+
     map = new Map(document.getElementById("map") as HTMLElement, {
       center,
       zoom: 13,
@@ -48,12 +52,76 @@
       rotateControl: false,
       fullscreenControl: false
     })
-    // Close infowindow when map is clicked
-    google.maps.event.addListener(map, "click", (event: any) => {
-      infowindow.close();
+    map.setClickableIcons(false);
+
+    /*
+    // Collision Behaviour
+    // @ts-ignore
+    const select = new mdc.select.MDCSelect(
+      document.querySelector(".mdc-select") as HTMLElement
+    );
+
+    select.listen("MDCSelect:change", () => {
+      collisionBehavior = select.value;
+      markers.forEach((marker) => {
+        marker.collisionBehavior = collisionBehavior;
+      });
     });
+
+    select.value = collisionBehavior;
+    */
+
+    // Close infowindow when map is clicked or add new spot
+    let newSpotCoords: number[];
+
+    google.maps.event.addListener(map, "click", (mapsMouseEvent: any) => {
+      if (isInfoWindowOpen(infowindow)) {
+        infowindow.close();
+        infowindow.setPosition(undefined);
+        // console.log('Is this working???');
+      }
+      else {
+        // console.log(event.MouseEvent);
+        newSpotCoords = mapsMouseEvent.latLng;
+        const newMarker = new google.maps.marker.AdvancedMarkerElement({
+          position: mapsMouseEvent.latLng,
+          map,
+          content: new google.maps.marker.PinElement({
+            background: '#000000',
+            scale: 0.7
+          }).element
+        });
+        // newMarker.setAnimation(google.maps.Animation.DROP)
+        infowindow.setContent(
+          '<div id="new-spot-form">' +
+            '<form method="POST" id="spot-form" action="" name="form_canvas" style=""  >' +
+              '<label for="spot-name" style="align-self: center;"><b>New Spot!</b></label>' +
+              '<input id="spot-name" name="spot-name" type="text" value="" placeholder="name..." autocomplete="off" >' +
+              '<select name="spot-type" id="spot-type">' +
+                '<option value="">--Please select spot type--</option>' +
+                '<option value="Outdoor Spots">Outdoor Spot</option>' +
+                '<option value="Parkour Gyms">Parkour Gym</option>' +
+                '<option value="Parkour Parks">Parkour Parks</option>' +
+                '<option value="Under Cover Spots">Under Cover Spot</option>' +
+              '</select>' +
+              '<button id="submit-button" type="submit" style="border: none; background-color: #000000; color: #ffffff">Add</button>' +
+            '</form>' +
+          '</div>'
+        )
+
+        infowindow.open({
+          anchor: newMarker,
+          map
+        })
+        setTimeout(() => {
+          document.querySelector('#submit-button')!.addEventListener('click', (e) => onSubmit(newSpotCoords, e));
+
+        }, 100)
+        infowindow.focus
+      }
+    });
+
     // Set current location marker
-    const { lat, lng } = center;
     currentMarker = new google.maps.Marker({
       position: center,
       map,
@@ -78,37 +146,62 @@
     const londonSpots: LocationPin[] = await getLondonSpots()
     for (let spot of londonSpots) {
 
-        const marker = new google.maps.Marker({
-          position: {
-            lat: spot.geometry.coordinates[1],
-            lng: spot.geometry.coordinates[0]
-          },
-          map
-          // title: spot.properties.Name
-        })
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        position: {
+          lat: spot.geometry.coordinates[1],
+          lng: spot.geometry.coordinates[0]
+        },
+        map,
+        collisionBehavior: collisionBehavior,
+        content: new google.maps.marker.PinElement({
+          background: '#000000',
+          scale: 0.7
+        }).element
+        // title: spot.properties.Name
+      })
 
-        marker.addListener('click', () => {
-          infowindow.setContent(
-            '<div id="content">' +
-              `<h3 id="firstHeading" class="heading">${spot.properties.Name}</h3>` +
-              '<div id="bodyContent">' +
-                `<router-link to="/details/${spot._id}">DEEETZ</router-link>`
-                `<a href='#/details/${spot._id}'>Details</a> ` +
+      marker.addListener('click', () => {
+        // router.push(`/details/${spot._id}`)
+        infowindow.setContent(
+          '<div id="content">' +
+            `<h3 id="firstHeading" class="heading">${spot.properties.Name}</h3>` +
+            '<div id="bodyContent">' +
+              `<a href='/details/${spot._id}'>Details</a> ` +
               "</div>" +
-            "</div>"
-          )
-          infowindow.open({
-            anchor: marker,
-            map
-          })
-          infowindow.focus
+              "</div>"
+              )
+              //`<router-link to="/details/${spot._id}">DEEETZ</router-link>`
+        infowindow.open({
+          anchor: marker,
+          map
         })
-
+        infowindow.focus
+      })
+      markers.push(marker);
     }
     // Marker animation
     pulseMarker()
   }
 
+
+  function onSubmit(newSpotCoords: number[], e: any) {
+    e.preventDefault();
+
+    const spotName = (<HTMLInputElement>document.getElementById('spot-name')).value;
+    const spotType = (<HTMLInputElement>document.getElementById('spot-type')).value;
+
+    (<HTMLInputElement>document.getElementById('spot-name')).value = '';
+    (<HTMLInputElement>document.getElementById('spot-name')).value = '';
+    console.log(spotName, spotType);
+    postSpot({ spotName, spotType, coordinates: newSpotCoords})
+  }
+
+
+  function isInfoWindowOpen(infoWindow: google.maps.InfoWindow){
+    var map = infoWindow.getPosition();
+    // console.log(map);
+    return (map !== null && typeof map !== "undefined");
+}
 
   function toggleTracking() {
     if (tracking.value && map) {
@@ -149,8 +242,8 @@
             scaledSize: new google.maps.Size(50 * scale, 50 * scale),
             anchor: anchor
         });
-    }, 20);
-  }
+      }, 20);
+    }
 
 
   function success(pos: GeolocationPosition, map: google.maps.Map) {
@@ -174,6 +267,11 @@
     // Update location state
     currentlocation.value = newLocation;
   }
+
+  // Stop tracking on unmount
+  onUnmounted(() => {
+    navigator.geolocation.clearWatch(watchID)
+  })
 </script>
 
 <template>
@@ -189,6 +287,5 @@
   .vue-map-container {
     height: 100%;
   }
-
 
 </style>

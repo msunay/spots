@@ -25,11 +25,11 @@ export interface LocationType {
 
 export interface LocationPin {
   _id: string;
-  type?: string;
+  type: string;
   properties: {
     Name: string;
-    description?: string;
-    gx_media_links?: string;
+    description: string | null;
+    gx_media_links: string | null;
   },
   geometry: {
     type: string;
@@ -48,4 +48,10 @@ export interface FeaturesByTypes {
   ParkourGyms: LocationPin[];
   ParkourParks: LocationPin[];
   UnderCoverSpots: LocationPin[];
+}
+
+export interface NewSpot {
+  spotName: string;
+  spotType: string;
+  coordinates: number[];
 }

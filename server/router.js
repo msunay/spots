@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { getAllLondonSpots, getOneLondonSpot } from './Controllers.js';
+import { addNewSpot, getAllLondonSpots, getOneLondonSpot } from './Controllers.js';
 
 
 const router = new Router();
@@ -8,5 +8,7 @@ const router = new Router();
 router.get('/london', getAllLondonSpots);
 
 router.get('/london/details/:_id', getOneLondonSpot);
+
+router.post('/london', addNewSpot);
 
 export default router;

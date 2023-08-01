@@ -7,28 +7,17 @@ async function main() {
 }
 
 const locationSchema = new mongoose.Schema({
-  type: { type: String, required: true },
-  name: { type: String, required: true },
-  crs: {
-    type: String,
-    properties: {
-      name: String
-    }
-  },
-  features: [{
     type: String,
     properties: {
       Name: { type: String, required: true },
       description: String,
-      gx_media_links: String,
-      required: true
+      gx_media_links: String
     },
     geometry: {
-      type: String,
       coordinates: [Number]
     }
-  }]
-})
+  })
+
 
 const LondonLocation = mongoose.model('London', locationSchema);
 
