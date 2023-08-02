@@ -1,12 +1,11 @@
 <script setup lang='ts'>
   import { useLocationStore } from "@/stores/location";
-  import type { Coordinates, FeaturesByTypes, LocationPin, LocationType } from "@/customTypings/Location";
+  import type { Coordinates, LocationPin } from "@/customTypings/Location";
   import { onUnmounted, watch } from "vue";
   import { getLondonSpots, postSpot } from "@/ApiService";
   import locationIcon from './icons/locationIcon.svg'
   import locationIconBack from './icons/locationIconBack.svg'
   import { storeToRefs } from "pinia";
-  import router from "@/router";
 
   // Get location store
   const location = useLocationStore();
@@ -54,23 +53,6 @@
     })
     map.setClickableIcons(false);
 
-    /*
-    // Collision Behaviour
-    // @ts-ignore
-    const select = new mdc.select.MDCSelect(
-      document.querySelector(".mdc-select") as HTMLElement
-    );
-
-    select.listen("MDCSelect:change", () => {
-      collisionBehavior = select.value;
-      markers.forEach((marker) => {
-        marker.collisionBehavior = collisionBehavior;
-      });
-    });
-
-    select.value = collisionBehavior;
-    */
-
     // Close infowindow when map is clicked or add new spot
     let newSpotCoords: number[];
 
@@ -78,7 +60,6 @@
       if (isInfoWindowOpen(infowindow)) {
         infowindow.close();
         infowindow.setPosition(undefined);
-        // console.log('Is this working???');
       }
       else {
         const { lat, lng } = mapsMouseEvent.latLng.toJSON()
@@ -93,8 +74,6 @@
           }).element
         });
 
-
-        // newMarker.setAnimation(google.maps.Animation.DROP)
         infowindow.setContent(
           '<div id="new-spot-form">' +
             '<form method="POST" id="spot-form" action="" name="form_canvas" style=""  >' +
@@ -121,7 +100,7 @@
 
         }, 100)
         infowindow.focus;
-        
+
 
       }
     });
@@ -164,20 +143,18 @@
           background: '#000000',
           scale: 0.7
         }).element
-        // title: spot.properties.Name
       })
 
       marker.addListener('click', () => {
-        // router.push(`/details/${spot._id}`)
         infowindow.setContent(
           '<div id="content">' +
             `<h3 id="firstHeading" class="heading">${spot.properties.Name}</h3>` +
             '<div id="bodyContent">' +
               `<a href='/details/${spot._id}'>Details</a> ` +
-              "</div>" +
-              "</div>"
-              )
-              //`<router-link to="/details/${spot._id}">DEEETZ</router-link>`
+            "</div>" +
+          "</div>"
+        )
+
         infowindow.open({
           anchor: marker,
           map
@@ -194,24 +171,27 @@
   function onSubmit(newSpotCoords: number[], infowindow: google.maps.InfoWindow, newMarker: google.maps.marker.AdvancedMarkerElement, e: any) {
     e.preventDefault();
 
+    // Get form data
     const spotName = (<HTMLInputElement>document.getElementById('spot-name')).value;
     const spotType = (<HTMLInputElement>document.getElementById('spot-type')).value;
 
+    // Reverse coords for db
     newSpotCoords.reverse();
 
+    // Reset form
     (<HTMLInputElement>document.getElementById('spot-name')).value = '';
     (<HTMLInputElement>document.getElementById('spot-name')).value = '';
-    console.log(spotName, spotType);
 
-
+    // Close form and display thanks
     infowindow.setContent('Thanks!')
     setTimeout(() => {
       infowindow.close();
     }, 1700)
+
+    // Post spot to db
     postSpot({ spotName, spotType, coordinates: newSpotCoords})
       .then((newSpot) => {
         newMarker.addListener('click', () => {
-          // router.push(`/details/${spot._id}`)
           infowindow.setContent(
             '<div id="content">' +
               `<h3 id="firstHeading" class="heading">${newSpot.properties.Name}</h3>` +
@@ -220,23 +200,19 @@
               "</div>" +
             "</div>"
           )
-                //`<router-link to="/details/${spot._id}">DEEETZ</router-link>`
           infowindow.open({
             anchor: newMarker,
             map
           })
-        infowindow.focus
+          infowindow.focus
         })
       })
   }
 
-
-
   function isInfoWindowOpen(infoWindow: google.maps.InfoWindow){
     var map = infoWindow.getPosition();
-    // console.log(map);
     return (map !== null && typeof map !== "undefined");
-}
+  }
 
   function toggleTracking() {
     if (tracking.value && map) {
@@ -267,18 +243,18 @@
     let maxScale = 1.1;
 
     setInterval(function () {
-        if (scale > maxScale || scale < minScale) direction *= -1;
-        scale += direction * 0.01;
+      if (scale > maxScale || scale < minScale) direction *= -1;
+      scale += direction * 0.01;
 
-        let anchor = new google.maps.Point(25 * scale, 25 * scale);
+      let anchor = new google.maps.Point(25 * scale, 25 * scale);
 
-        currentMarker.setIcon({
-            url: locationIcon,
-            scaledSize: new google.maps.Size(50 * scale, 50 * scale),
-            anchor: anchor
-        });
-      }, 20);
-    }
+      currentMarker.setIcon({
+          url: locationIcon,
+          scaledSize: new google.maps.Size(50 * scale, 50 * scale),
+          anchor: anchor
+      });
+    }, 20);
+  }
 
 
   function success(pos: GeolocationPosition, map: google.maps.Map) {
@@ -287,7 +263,7 @@
       lat: pos.coords.latitude,
       lng: pos.coords.longitude
     }
-    console.log(pos);
+
     if (map) {
       // Set markers at current postion when watch comes through
       currentMarker.setPosition(newLocation)

@@ -3,7 +3,6 @@
   import Logo from "./Logo.vue";
   import MapControls from './MapControls.vue';
   import TrackLocationButton from './TrackLocationButton.vue';
- 
 </script>
 
 <template>
@@ -27,6 +26,4 @@
   .trackLocation {
     z-index: 2;
   }
-
-
 </style>

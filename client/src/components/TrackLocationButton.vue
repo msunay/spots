@@ -2,8 +2,7 @@
   import { useLocationStore } from '../stores/location'
 
   // Get location store
-  const location = useLocationStore()
-
+  const location = useLocationStore();
 </script>
 
 <template>

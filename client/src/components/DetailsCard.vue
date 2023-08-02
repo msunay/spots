@@ -1,7 +1,7 @@
 <script setup lang='ts'>
   import { getSpot } from '@/ApiService';
-  import type { LocationPin, Coordinates } from '@/customTypings/Location';
-  import { onMounted, ref } from 'vue';
+  import type { Coordinates } from '@/customTypings/Location';
+  import { ref } from 'vue';
   import { useRoute } from 'vue-router';
   import { useLocationStore } from "@/stores/location";
   import { storeToRefs } from 'pinia';
@@ -31,8 +31,6 @@
   })
   const { currentlocation, tracking } = storeToRefs(useLocationStore())
 
-
-  console.log(spot.value);
   const spotLatLng = {
     lat: spot.value.geometry.coordinates[1],
     lng: spot.value.geometry.coordinates[0]
@@ -40,19 +38,10 @@
   const distanceAway = haversine_distance(currentlocation.value, spotLatLng)
 
   const currentRoute = useRoute();
-
   const id = currentRoute.params.id as string;
 
   getSpot(id).then(s => spot.value = s)
-  // let spot: LocationPin;
 
-  // async function getSpots(id: string) {
-  //   return await getSpot(id)
-  // }
-  // await getSpot(id).then(s => spot = s);
-  // onMounted(() => {
-  //   spot = getSpots(id)
-  // })
 
   function haversine_distance(mk1: Coordinates, mk2: Coordinates) {
     var R = 3958.8; // Radius of the Earth in miles
@@ -78,8 +67,6 @@
       </div>
 
     </div>
-    <!-- <img v-for="img of spot.properties.gx_media_links" :src="`${img}`" :alt="img"> -->
-    <!-- <img src="../assets/Imax-3.webp"> -->
     <p>{{ spot.properties.description }}</p>
     <router-link class="home-link" to="/">Back to Map</router-link>
   </div>

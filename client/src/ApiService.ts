@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { LocationType, FeaturesByTypes, LocationPin, NewSpot } from "./customTypings/Location";
+import type { LocationPin, NewSpot } from "./customTypings/Location";
 
 const baseURL = 'http://localhost:3000';
 
@@ -11,7 +11,6 @@ export async function getLondonSpots() {
 
 export async function getSpot(id: string) {
   const spot: LocationPin = (await axios.get(`${baseURL}/london/details/${id}`)).data;
-  console.log(spot,'spot')
   return spot;
 }
 
