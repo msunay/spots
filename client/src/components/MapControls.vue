@@ -44,6 +44,7 @@ import Icon from './Icon.vue';
     z-index: 1;
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
+    background-color: #0d060f;
   }
 
   .controls-pull-tab {
@@ -61,5 +62,6 @@ import Icon from './Icon.vue';
     height: 100%;
     display: flex;
     align-items: center;
+
   }
 </style>

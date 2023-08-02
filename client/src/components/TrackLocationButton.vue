@@ -38,6 +38,7 @@
   }
 
   .glow-icon {
+    /* z-index: 3; */
       animation: pulse 2s infinite;
     }
 

@@ -16,10 +16,10 @@ export async function getSpot(id: string) {
 }
 
 export async function postSpot(newSpot: NewSpot) {
-  let response: LocationPin = await axios.post(`${baseURL}/london`, newSpot, {
+  let response: LocationPin = (await axios.post(`${baseURL}/london`, newSpot, {
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+  })).data;
   return response;
 }

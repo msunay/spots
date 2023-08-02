@@ -81,8 +81,9 @@
         // console.log('Is this working???');
       }
       else {
-        // console.log(event.MouseEvent);
-        newSpotCoords = mapsMouseEvent.latLng;
+        const { lat, lng } = mapsMouseEvent.latLng.toJSON()
+        newSpotCoords = [lat, lng];
+
         const newMarker = new google.maps.marker.AdvancedMarkerElement({
           position: mapsMouseEvent.latLng,
           map,
@@ -91,14 +92,16 @@
             scale: 0.7
           }).element
         });
+
+
         // newMarker.setAnimation(google.maps.Animation.DROP)
         infowindow.setContent(
           '<div id="new-spot-form">' +
             '<form method="POST" id="spot-form" action="" name="form_canvas" style=""  >' +
               '<label for="spot-name" style="align-self: center;"><b>New Spot!</b></label>' +
-              '<input id="spot-name" name="spot-name" type="text" value="" placeholder="name..." autocomplete="off" >' +
+              '<input id="spot-name" name="spot-name" type="text" value="" placeholder="name..." style="width: 100%" autocomplete="off" >' +
               '<select name="spot-type" id="spot-type">' +
-                '<option value="">--Please select spot type--</option>' +
+                '<option value="">--Please choose the spot type--</option>' +
                 '<option value="Outdoor Spots">Outdoor Spot</option>' +
                 '<option value="Parkour Gyms">Parkour Gym</option>' +
                 '<option value="Parkour Parks">Parkour Parks</option>' +
@@ -114,24 +117,16 @@
           map
         })
         setTimeout(() => {
-          document.querySelector('#submit-button')!.addEventListener('click', (e) => onSubmit(newSpotCoords, e));
+          document.querySelector('#submit-button')!.addEventListener('click', (e) => onSubmit(newSpotCoords, infowindow, newMarker, e));
 
         }, 100)
-        infowindow.focus
+        infowindow.focus;
+        
+
       }
     });
 
-    // Set current location marker
-    currentMarker = new google.maps.Marker({
-      position: center,
-      map,
-      icon: {
-        url: locationIcon,
-        anchor: new google.maps.Point(25,25)
-      }
-    });
-    currentMarker.setVisible(false);
-
+    // Set current location markers
     currentMarkerBackground = new google.maps.Marker({
       position: center,
       map,
@@ -141,6 +136,18 @@
       }
     });
     currentMarkerBackground.setVisible(false);
+
+
+    currentMarker = new google.maps.Marker({
+      position: center,
+      map,
+      icon: {
+        url: locationIcon,
+        anchor: new google.maps.Point(25,25)
+      }
+    });
+    currentMarker.setVisible(false);
+    currentMarker.setZIndex(1000)
 
     // Get data and add to map
     const londonSpots: LocationPin[] = await getLondonSpots()
@@ -184,17 +191,45 @@
   }
 
 
-  function onSubmit(newSpotCoords: number[], e: any) {
+  function onSubmit(newSpotCoords: number[], infowindow: google.maps.InfoWindow, newMarker: google.maps.marker.AdvancedMarkerElement, e: any) {
     e.preventDefault();
 
     const spotName = (<HTMLInputElement>document.getElementById('spot-name')).value;
     const spotType = (<HTMLInputElement>document.getElementById('spot-type')).value;
 
+    newSpotCoords.reverse();
+
     (<HTMLInputElement>document.getElementById('spot-name')).value = '';
     (<HTMLInputElement>document.getElementById('spot-name')).value = '';
     console.log(spotName, spotType);
+
+
+    infowindow.setContent('Thanks!')
+    setTimeout(() => {
+      infowindow.close();
+    }, 1700)
     postSpot({ spotName, spotType, coordinates: newSpotCoords})
+      .then((newSpot) => {
+        newMarker.addListener('click', () => {
+          // router.push(`/details/${spot._id}`)
+          infowindow.setContent(
+            '<div id="content">' +
+              `<h3 id="firstHeading" class="heading">${newSpot.properties.Name}</h3>` +
+              '<div id="bodyContent">' +
+                `<a href='/details/${newSpot._id}'>Details</a> ` +
+              "</div>" +
+            "</div>"
+          )
+                //`<router-link to="/details/${spot._id}">DEEETZ</router-link>`
+          infowindow.open({
+            anchor: newMarker,
+            map
+          })
+        infowindow.focus
+        })
+      })
   }
+
 
 
   function isInfoWindowOpen(infoWindow: google.maps.InfoWindow){
@@ -212,8 +247,8 @@
         enableHighAccuracy: true // BUG tracks location after toggle if false
       })
       // Show markers
-      currentMarker.setVisible(true)
       currentMarkerBackground.setVisible(true)
+      currentMarker.setVisible(true)
       map.setZoom(16)
 
     } else if (!tracking.value && map) {
