@@ -49,6 +49,12 @@ To begin using Real Time Trivia, follow these steps:
   cd spots/client
   npm run dev
   ```
+## Contributing
 
+Improvements are welcome :)
 
-Developed by Alex Eze [LinkedIn](https://www.linkedin.com/in/alex-eze-822255a7/)
+Fork the repo and do your thing. Push to your fork and submit a pull request.
+
+## Author
+
+Alex Eze - [Github](https://github.com/msunay) - [LinkedIn](https://www.linkedin.com/in/alex-eze-822255a7/)
