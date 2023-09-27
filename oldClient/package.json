@@ -1,0 +1,42 @@
+{
+  "name": "client",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
+    "lint": "eslint --ext .ts,.vue --ignore-path .gitignore src"
+  },
+  "dependencies": {
+    "@fawmi/vue-google-maps": "^0.9.79",
+    "axios": "^1.4.0",
+    "pinia": "^2.1.4",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
+    "vue2-hammer": "^2.1.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.0",
+    "@types/google.maps": "^3.53.5",
+    "@types/node": "^18.17.1",
+    "@types/vue2-hammer": "^2.1.2",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/tsconfig": "^0.4.0",
+    "autoprefixer": "^10.4.14",
+    "browserslist": "^4.21.9",
+    "eslint": "^8.46.0",
+    "eslint-plugin-vue": "^9.16.1",
+    "npm-run-all": "^4.1.5",
+    "postcss-preset-env": "^9.1.0",
+    "typescript": "~5.1.6",
+    "vite": "^4.4.6",
+    "vue-tsc": "^1.8.6"
+  },
+  "browserslist": [
+    "defaults and supports es6-module",
+    "maintained node versions"
+  ]
+}
