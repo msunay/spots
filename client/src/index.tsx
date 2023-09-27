@@ -1,14 +1,13 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
-import Header from './components/Header';
-import { Counter } from './features/counter/Counter';
+
+import Map from './components/Map';
 
 export const App = () => {
   return (
     <View style={styles.container}>
-      <Header />
-      <Counter />
+      <Map />
       <StatusBar style="auto" />
     </View>
   );
