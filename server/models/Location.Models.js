@@ -3,6 +3,7 @@ import LondonLocation from "./index.js";
 export async function getLondonSpots() {
   try {
     const locationsArr = await LondonLocation.find({});
+    console.log(locationsArr);
     return locationsArr;
   } catch (err) {
     console.log(err);

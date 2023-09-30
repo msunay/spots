@@ -4,4 +4,5 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "prettier.configPath": "client/.prettierrc.js",
+  "prettier.singleQuote": true,
 }

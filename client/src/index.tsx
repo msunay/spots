@@ -1,14 +1,19 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { BottomNavigation, BottomNavigationTab, Layout, Text } from '@ui-kitten/components';
 
-import Map from './components/Map';
+// const { Navigator, Screen } = createBottomTabNavigator();
+
+import MapComponent from './components/MapComponent';
 
 export const App = () => {
   return (
     <View style={styles.container}>
-      <Map />
-      <StatusBar style="auto" />
+      <MapComponent />
+      <StatusBar style="dark" />
     </View>
   );
 };
