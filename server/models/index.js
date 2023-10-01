@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 main().catch(err => console.log(err));
 async function main () {
-  await mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DB_NAME}`).then(() => {
-    console.log('database connneted :)');
+  await mongoose.connect(`mongodb://127.0.0.1:27017/spots`).then(() => {
+    console.log('database connneted :)', process.env.DB_NAME);
   })
 }
 
