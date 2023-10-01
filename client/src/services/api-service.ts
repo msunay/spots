@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { LocationPin, NewSpot } from '../types';
+import { LocationPin, NewSpot } from '../Types';
 
 export const spotsApi = createApi({
   reducerPath: 'spotsApi',
@@ -17,11 +17,7 @@ export const spotsApi = createApi({
         }),
       }),
       getOneSpot: builder.query<LocationPin, string>({
-        query: id => ({
-          url: `london/details/${id}`,
-          method: 'GET',
-          body: id
-        }),
+        query: id => `london/details/${id}`
       }),
     };
   },

@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { RootState } from '../store';
 
-import { coords } from '../../types';
+import { coords } from '../../Types';
 
 const initialState: coords = {
   lat: 51.50801934581279,

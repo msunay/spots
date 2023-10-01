@@ -1,14 +1,13 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { RootState } from '../app/store';
-import MapView, { Marker } from 'react-native-maps';
-import { PROVIDER_GOOGLE } from 'react-native-maps';
-import { LocationPin, coords, region } from '../types';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { LocationPin, coords, region } from '../Types';
 import { useGetLondonSpotsQuery } from '../services/api-service';
+import images from '../config/images';
+import { Image } from 'expo-image';
+import { useNavigation, Link } from 'expo-router';
 
 export default function MapComponent() {
-  const [currentLocation, setCurrentLocation] = useState<coords>({} as coords);
   const [mapRegion, setmapRegion] = useState<region>({
     latitude: 51.508,
     longitude: -0.087,
@@ -18,6 +17,8 @@ export default function MapComponent() {
   const [markerPoints, setMarkerPoints] = useState<LocationPin[]>([]);
 
   const { data } = useGetLondonSpotsQuery();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (data) {
@@ -33,17 +34,39 @@ export default function MapComponent() {
         onMapReady={() => {
           console.log('Map is ready');
         }}
-        style={styles.map}>
+        style={styles.map}
+      >
+        <Image
+          source={images.spotsLogo}
+          style={styles.image}
+        />
         {markerPoints.map(locationPoint => (
-          <Marker
+          <Link
             key={locationPoint._id}
-            coordinate={{
-              latitude: locationPoint.geometry.coordinates[1],
-              longitude: locationPoint.geometry.coordinates[0],
-            }}
-            title={locationPoint.properties.Name}
-            // icon=
-          />
+            href={{
+            pathname: "/modal",
+            params: { id: locationPoint._id }
+          }}>
+            <Marker
+              key={locationPoint._id}
+              coordinate={{
+                latitude: locationPoint.geometry.coordinates[1],
+                longitude: locationPoint.geometry.coordinates[0],
+              }}
+              title={locationPoint.properties.Name}
+              pinColor='navy'
+            >
+              <Callout
+                style={styles.callout}
+                tooltip={true}
+                // onPress={() => {
+                //   navigation.navigate("modal", { id: locationPoint._id })
+                // }}
+              >
+                <Text>{locationPoint.properties.Name}</Text>
+              </Callout>
+            </Marker>
+          </Link>
         ))}
       </MapView>
     </View>
@@ -57,7 +80,29 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   map: {
+    flex: 1,
     width: '100%',
     height: '100%',
   },
+  image: {
+    resizeMode: 'contentFit',
+    height: 80,
+    width: 300,
+    marginTop: 50,
+    alignSelf: 'center'
+  },
+  callout: {
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    // shadowColor: '#171717',
+    // shadowOffset: {
+    //   width: -2,
+    //   height: 4
+    // },
+    // shadowOpacity: 1,
+    // shadowRadius: 10
+  }
 });
