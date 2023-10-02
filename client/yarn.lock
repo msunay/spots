@@ -5795,7 +5795,7 @@ metro-transform-worker@0.76.8:
     metro-transform-plugins "0.76.8"
     nullthrows "^1.1.1"
 
-metro@0.76.8:
+metro@0.76.8, metro@~0.76.7:
   version "0.76.8"
   resolved "https://registry.yarnpkg.com/metro/-/metro-0.76.8.tgz#ba526808b99977ca3f9ac5a7432fd02a340d13a6"
   integrity sha512-oQA3gLzrrYv3qKtuWArMgHPbHu8odZOD9AoavrqSFllkPgOtmkBvNNDLCELqv5SjBfqjISNffypg+5UGG3y0pg==

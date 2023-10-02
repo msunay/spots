@@ -56,8 +56,8 @@ function RootLayoutNav() {
     <Provider store={store}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
-          <Stack.Screen name="(Home)" />
-          <Stack.Screen name="modal" />
+          {/* <Stack.Screen name="(Home)/_layout" />
+          <Stack.Screen name="modal" /> */}
         </Stack>
       </ThemeProvider>
     </Provider>

@@ -28,9 +28,10 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
+      }}
+      >
       <Tabs.Screen
-        name="map-screen"
+        name="index"
         options={{
           title: 'Map',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,

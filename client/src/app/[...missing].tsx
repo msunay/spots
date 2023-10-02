@@ -1,17 +1,20 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
-
+import { useNavigation } from 'expo-router';
+import { FlatList } from 'react-native';
 // import { Text, View } from ''
 
 export default function NotFoundScreen() {
+
+  const navigation = useNavigation();
+
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
       <View style={styles.container}>
-        <Text style={styles.title}>This screen doesn't exist.</Text>
-
+        <Text style={styles.title}>{`This screen doesn't exist. ${navigation.getState().routes}`}</Text>
         <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
+          <Text style={styles.linkText}>{`${navigation.getState().routes[0].key}`}</Text>
         </Link>
       </View>
     </>
