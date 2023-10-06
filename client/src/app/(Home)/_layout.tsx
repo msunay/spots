@@ -5,6 +5,7 @@ import { Pressable, useColorScheme } from 'react-native';
 import Colors from '../../constants/Colors';
 import { useEffect } from 'react';
 
+
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
@@ -12,8 +13,19 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
 }
+
+// const useStyles = makeStyles({
+//   root: {
+//     alignItems: "flex-start",
+//     display: "flex",
+//     flexDirection: "column",
+//     justifyContent: "flex-start",
+//     ...shorthands.padding("50px", "20px"),
+//     rowGap: "20px",
+//   },
+// });
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -26,16 +38,17 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}
+      // screenOptions={{
+      //   tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      // }}
       >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Map',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
           headerShown: false
+          
           // headerRight: () => (
           //   <Link href="/modal" asChild>
           //     <Pressable>
@@ -56,7 +69,7 @@ export default function TabLayout() {
         name="two"
         options={{
           title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
         }}
       />
     </Tabs>

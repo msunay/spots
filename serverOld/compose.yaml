@@ -1,0 +1,13 @@
+version: '3'
+services:
+  server:
+    container_name: docker-spots-backend
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    external_links:
+    - mongo
+    environment:
+      NODE_ENV: production
+      DOCKER_HOST: host.docker.internal

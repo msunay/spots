@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from '../features/store';
+import { FluentProvider, teamsLightTheme } from '@fluentui/react-components';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -38,7 +39,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
   }, [loaded]);
 
@@ -54,12 +55,12 @@ function RootLayoutNav() {
 
   return (
     <Provider store={store}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      {/* <FluentProvider theme={teamsLightTheme}> */}
         <Stack>
-          {/* <Stack.Screen name="(Home)/_layout" />
-          <Stack.Screen name="modal" /> */}
+          {/* <Stack.Screen name="(Home)/_layout" /> */}
+          <Stack.Screen name="modal" options={{ headerShown: false }}/>
         </Stack>
-      </ThemeProvider>
+      {/* </FluentProvider> */}
     </Provider>
   );
 }
