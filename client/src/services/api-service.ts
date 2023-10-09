@@ -3,7 +3,7 @@ import { LocationPin, NewSpot } from '../Types';
 
 export const spotsApi = createApi({
   reducerPath: 'spotsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://192.168.1.88:3000/'}),
+  baseQuery: fetchBaseQuery({ baseUrl: `${process.env.BACKEND_BASE_URL}:3000/`}),
   endpoints: builder => {
     return {
       getLondonSpots: builder.query<LocationPin[], void>({
