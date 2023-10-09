@@ -6,8 +6,11 @@ services:
       context: .
     ports:
       - 3000:3000
+    volumes:
+      - .:/usr/src/app
     external_links:
     - mongo
     environment:
       NODE_ENV: production
       DOCKER_HOST: host.docker.internal
+      CONNECTION_STRING: "mongodb+srv://alexe:poordoddieA1@cluster0.cacyjjv.mongodb.net/"
